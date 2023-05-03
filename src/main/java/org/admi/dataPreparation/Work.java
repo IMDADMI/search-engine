@@ -27,7 +27,7 @@ public class Work {
 
         makeSQLConnection();
         selectTafassir();
-//        work();
+        work();
         startLemmitization();
     }
 

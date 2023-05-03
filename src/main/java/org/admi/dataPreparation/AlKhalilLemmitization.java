@@ -17,6 +17,7 @@ public class AlKhalilLemmitization {
             double start = new Date().getTime();
 
             for(int i=0;i<filesLength;i++){
+                if(files[i].getName().equals(".gitignore"))continue;
                 String fileName = files[i].getName();
                 int numericalValue = Integer.parseInt(fileName.substring(fileName.lastIndexOf('_')+1,fileName.indexOf('.')));
                 if(!(numericalValue >= startOfCentury && numericalValue <= endOfCentury))
