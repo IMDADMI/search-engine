@@ -11,6 +11,15 @@ target/
 *.iws
 *.iml
 *.ipr
+#########
+src/lemmesSiecleSansLemmesSaintCoran/*.xml
+src/lemmesSiecle/*.xml
+src/lemme/*.xml
+src/dataset/*.txt
+src/bow/lemmas/*.xml
+src/bow/interpretation/*.txt
+/main_bayan.db
+
 
 ### Eclipse ###
 .apt_generated
