@@ -3,6 +3,9 @@ package org.admi.bagOfWord;
 import Jama.Matrix;
 import net.oujda_nlp_team.ADATAnalyzer;
 import org.admi.dataExtraction.FilterLemma;
+import org.apache.commons.math3.analysis.function.Cos;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -109,20 +112,16 @@ public class PrepareData {
     private void fill_TF_IDF() {
         int line = tokensPerInterpretation.keySet().size();
         int column = tokens.size();
-        double TF [][]= new double[line][column];
-
-        int k = 0;
+        double TF [][] = new double[line][column];
         for(int i = 0; i< line; i++){
+            int k = 0;
             for (String token : tokens) {
-                int frequencyOfTokenInEachInterpretation = Collections.frequency(tokensPerInterpretation.get(i+1), token);
-                System.out.println("token per inter : "+tokensPerInterpretation.get(i+1).size());
-                System.out.println("freq : "+frequencyOfTokenInEachInterpretation);
-                TF[i][k++] = frequencyOfTokenInEachInterpretation / tokensPerInterpretation.get(i+1).size();
+                double frequencyOfTokenInEachInterpretation = Collections.frequency(tokensPerInterpretation.get(i+1), token);
+//                System.out.println("token per inter : "+tokensPerInterpretation.get(i+1).size());
+//                System.out.println("freq : "+frequencyOfTokenInEachInterpretation);
+                TF[i][k++] = (frequencyOfTokenInEachInterpretation / (double)(tokensPerInterpretation.get(i+1).size()));
             }
-            k=0;
         }
-        Matrix matrix = new Matrix(TF);
-        matrix.print(line,column);
 //        tokenInSentece //string integer
         tokens.forEach((token)->{
             final int numberOfSentenceContainingTheWord=1;
@@ -134,18 +133,36 @@ public class PrepareData {
 
         double tokenIDF[] = new double[tokens.size()];
         int index = 0;
-        for(String fromTokenSet : tokens)
-            tokenIDF[index] = Math.log(tokenInSentece.get(fromTokenSet)/tokensPerInterpretation.keySet().size());
+        for(String fromTokenSet : tokens){
+            double log = Math.log(tokenInSentece.get(fromTokenSet));
+            double numberOfToken = tokensPerInterpretation.keySet().size();
+//            System.out.println("the log is : "+log);
+//            System.out.println("the number of token is : "+numberOfToken);
+
+            tokenIDF[index] = (log/numberOfToken);
+
+        }
 
         for (int i = 0; i < column; i++) {
             for (int j = 0; j <line; j++) {
                 TF[j][i]+=tokenIDF[i];
             }
         }
+        new Matrix(TF).print(line,column);
+        RealVector realVector = new ArrayRealVector();
+
+        CosineSimilarity similarity = new CosineSimilarity();
+        double similarityBetweenTafassir = similarity.calculateSimilarity(TF,line,column);
+        System.out.println("the similarity between tafassir is : "+similarityBetweenTafassir);
+
 
     }
 
     public static void main(String[] args) throws SQLException, IOException, ParserConfigurationException, SAXException {
-//        new PrepareData().getSimilarity();
+        new PrepareData().getSimilarity();
+//        double one = 1;
+//        double one3 = 78;
+//
+//        System.out.println(one/one3);
     }
 }
